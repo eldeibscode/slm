@@ -14,8 +14,8 @@ import { Role } from '../../models/user.model';
   template: `
     <header
       [class]="
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ' +
-        (isScrolled() ? 'bg-white/80 backdrop-blur-lg shadow-sm' : 'bg-transparent')
+        'fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 ' +
+        (isScrolled() ? 'bg-white/80 backdrop-blur-lg shadow-sm' : 'bg-white/10 backdrop-blur-sm')
       "
     >
       <ui-container>
@@ -125,9 +125,13 @@ import { Role } from '../../models/user.model';
           </div>
 
           <!-- Mobile Menu Button -->
-          <button class="lg:hidden p-2" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+          <button
+            class="lg:hidden p-2 rounded-lg border-2 border-secondary-900 bg-white hover:bg-secondary-50 transition-colors shadow-md relative z-10"
+            (click)="toggleMobileMenu()"
+            aria-label="Toggle menu"
+          >
             @if (isMobileMenuOpen()) {
-              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-6 h-6 text-secondary-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -136,7 +140,7 @@ import { Role } from '../../models/user.model';
                 />
               </svg>
             } @else {
-              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-6 h-6 text-secondary-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
