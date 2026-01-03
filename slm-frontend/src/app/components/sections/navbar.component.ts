@@ -14,8 +14,8 @@ import { Role } from '../../models/user.model';
   template: `
     <header
       [class]="
-        'fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 ' +
-        (isScrolled() ? 'bg-white/90 backdrop-blur-xl shadow-sm' : 'bg-white/30 backdrop-blur-lg')
+        'fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 backdrop-blur-xl ' +
+        (isScrolled() ? 'bg-white/95 shadow-sm' : 'bg-white/40')
       "
     >
       <ui-container>
