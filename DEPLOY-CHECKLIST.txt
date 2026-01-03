@@ -1,0 +1,131 @@
+================================================================================
+SLM APPLICATION - DEPLOYMENT CHECKLIST FOR salam-ev.de
+================================================================================
+
+BEFORE DEPLOYMENT
+=================
+[ ] DNS A record for salam-ev.de points to VPS IP
+[ ] DNS A record for www.salam-ev.de points to VPS IP (optional)
+[ ] Confirmed DNS propagation: nslookup salam-ev.de 8.8.8.8
+[ ] SSH access to VPS confirmed: ssh root@YOUR_VPS_IP
+[ ] Code pushed to GitHub/GitLab
+
+DEPLOYMENT STEPS
+================
+
+STEP 1: PUSH CODE TO GIT
+[ ] cd E:/dev/slm
+[ ] git init (if not already done)
+[ ] git add .
+[ ] git commit -m "Production deployment for salam-ev.de"
+[ ] git remote add origin YOUR_GITHUB_REPO_URL
+[ ] git push -u origin main
+
+STEP 2: SSH INTO VPS
+[ ] ssh root@YOUR_VPS_IP
+[ ] Confirmed connection
+
+STEP 3: CLONE AND DEPLOY
+[ ] mkdir -p /docker/slm && cd /docker/slm
+[ ] git clone YOUR_GITHUB_REPO_URL .
+[ ] chmod +x deploy.sh
+[ ] bash deploy.sh
+[ ] Answered deployment prompts
+[ ] Deployment script completed successfully
+
+STEP 4: VERIFY DEPLOYMENT
+[ ] docker compose ps (all containers running)
+[ ] docker compose logs (no errors)
+[ ] curl http://salam-ev.de (returns HTML)
+[ ] Opened http://salam-ev.de in browser (works)
+
+STEP 5: SETUP SSL (OPTIONAL BUT RECOMMENDED)
+[ ] ./get-ssl-cert.sh
+[ ] Certificate obtained successfully
+[ ] ./finalize-https.sh
+[ ] HTTPS finalization completed
+[ ] curl https://salam-ev.de (returns HTML)
+[ ] Opened https://salam-ev.de in browser (secure)
+
+POST-DEPLOYMENT
+===============
+[ ] Frontend loads: https://salam-ev.de
+[ ] Backend API responds: https://salam-ev.de/api
+[ ] Health check OK: https://salam-ev.de/api/actuator/health
+[ ] All containers healthy: docker compose ps
+[ ] No errors in logs: docker compose logs -f
+[ ] SSL certificate valid (green padlock)
+
+SECURITY HARDENING
+==================
+[ ] Configure firewall: ufw allow 22/tcp
+[ ] Configure firewall: ufw allow 80/tcp
+[ ] Configure firewall: ufw allow 443/tcp
+[ ] Enable firewall: ufw enable
+[ ] Verify .env file permissions: chmod 600 .env
+[ ] Backup .env file to secure location
+[ ] Change default SSH port (optional)
+[ ] Setup fail2ban (optional)
+
+MAINTENANCE SETUP
+=================
+[ ] Setup automated database backups
+[ ] Setup automated file backups
+[ ] Configure monitoring/uptime checks
+[ ] Document backup restoration procedure
+[ ] Test backup restoration
+
+FINAL VERIFICATION
+==================
+[ ] Application accessible at https://salam-ev.de
+[ ] All features working correctly
+[ ] Images/uploads working
+[ ] Authentication working
+[ ] Database connections working
+[ ] No console errors in browser
+[ ] Mobile responsive working
+[ ] Performance acceptable
+
+DOCUMENTATION
+=============
+[ ] Read DEPLOYMENT-SUMMARY.md
+[ ] Read DEPLOY-QUICK-START.md
+[ ] Bookmark QUICK-REFERENCE.md
+[ ] Save .env credentials securely
+[ ] Document any custom configurations
+[ ] Share deployment info with team
+
+EMERGENCY CONTACTS
+==================
+VPS IP: ___________________________
+Domain: salam-ev.de
+Email: info@salam-ev.de
+Deployment Path: /docker/slm
+GitHub Repo: ___________________________
+
+IMPORTANT COMMANDS
+==================
+Status:         docker compose ps
+Logs:           docker compose logs -f
+Restart:        docker compose restart
+Stop:           docker compose down
+Start:          docker compose up -d
+Update:         git pull && docker compose up -d --build
+Backup DB:      docker exec slm-mysql mysqldump -uroot -p${MYSQL_ROOT_PASSWORD} slmdb > backup.sql
+
+TROUBLESHOOTING
+===============
+If backend fails:       docker compose logs backend
+If port in use:         sudo systemctl stop nginx; sudo systemctl stop apache2
+If SSL fails:           nslookup salam-ev.de 8.8.8.8
+Reset database:         docker compose down; docker volume rm slm_mysql-data
+
+================================================================================
+DEPLOYMENT DATE: _____________
+DEPLOYED BY: _____________
+STATUS: [ ] SUCCESS  [ ] FAILED  [ ] IN PROGRESS
+NOTES:
+________________________________________________________________________________
+________________________________________________________________________________
+________________________________________________________________________________
+================================================================================

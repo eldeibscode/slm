@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: slm-frontend
+    restart: unless-stopped
+
+    ports:
+      - "80:80"  # Frontend accessible on port 80
+
+    networks:
+      - slm-network
+
+    depends_on:
+      - backend
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Backend service reference (connects to existing backend)
+  backend:
+    image: slm-be-backend:latest  # Must be built from backend project first
+    container_name: slm-backend
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/slmdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-slm_user}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-slm_password}
+      JWT_SECRET: ${JWT_SECRET:-your-jwt-secret}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost,http://72.62.146.133}
+
+    networks:
+      - slm-network
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # MySQL service
+  mysql:
+    image: mysql:8.0
+    container_name: slm-mysql
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-slmdb}
+      MYSQL_USER: ${MYSQL_USER:-slm_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-slm_password}
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+    networks:
+      - slm-network
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  slm-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

@@ -1,0 +1,88 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and Editors
+.idea/
+**/.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/
+**/.vscode/
+
+# Claude Code AI
+.claude/
+**/.claude/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment files (contain secrets)
+.env
+*.env.local
+
+# Build outputs
+/slm-backend/build/
+/slm-backend/.gradle/
+/slm-backend/out/
+/slm-frontend/dist/
+/slm-frontend/.angular/
+/slm-frontend/node_modules/
+
+# Nested git repositories (prevents confusion)
+/slm-backend/.git/
+/slm-frontend/.git/
+
+# Logs
+*.log
+logs/
+
+# Docker volumes and runtime data
+mysql-data/
+upload-data/
+certbot/
+nginx/ssl/
+
+# Uploads and user-generated content
+uploads/
+**/uploads/
+slm-backend/uploads/
+
+# Notes and documentation drafts
+note/
+notes/
+docs/drafts/
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.swp
+*~
+*.old
+*.orig
+
+# Legacy/deprecated files
+docker-compose-simple.yml
+setup-https.sh
+setup-https-biedle.sh
+setup-nginx-simple.sh
+fix-images.sh
+fix-images-complete.sh
+HTTPS-SETUP-ANLEITUNG.md
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,88 @@
+<section [id]="pricingConfig.id" class="py-20 lg:py-32 bg-secondary-50">
+  <ui-container>
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <h2 class="text-3xl sm:text-4xl font-bold text-secondary-900 mb-4">
+        Simple, transparent pricing
+      </h2>
+      <p class="text-lg text-secondary-600 mb-8">
+        Choose the plan that fits your needs. All plans include a 14-day free trial.
+      </p>
+
+      <!-- Billing Toggle -->
+      <div class="inline-flex items-center bg-white rounded-full p-1 shadow-sm border">
+        <button (click)="isAnnual.set(false)" [class]="getToggleClass(false)">Monthly</button>
+        <button (click)="isAnnual.set(true)" [class]="getToggleClass(true)">
+          Annually
+          <span class="ml-1.5 text-xs text-primary-200">Save 20%</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      @for (plan of plans; track plan.name) {
+        <div [class]="getCardClass(plan.highlighted)">
+          @if (plan.highlighted) {
+            <span
+              class="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
+            >
+              Most Popular
+            </span>
+          }
+
+          <div class="mb-6">
+            <h3 [class]="getTitleClass(plan.highlighted)">
+              {{ plan.name }}
+            </h3>
+            <p [class]="getDescClass(plan.highlighted)">
+              {{ plan.description }}
+            </p>
+          </div>
+
+          <div class="mb-6">
+            <span [class]="getPriceClass(plan.highlighted)">
+              {{ getPrice(plan) }}
+            </span>
+            <span [class]="getPeriodClass(plan.highlighted)"> /month </span>
+          </div>
+
+          <ul class="space-y-3 mb-8">
+            @for (feature of plan.features; track feature) {
+              <li class="flex items-start gap-3">
+                <svg
+                  [class]="getCheckClass(plan.highlighted)"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <span [class]="getFeatureClass(plan.highlighted)">
+                  {{ feature }}
+                </span>
+              </li>
+            }
+          </ul>
+
+          <ui-button
+            [class]="getButtonClass(plan.highlighted)"
+            [variant]="plan.highlighted ? 'secondary' : 'primary'"
+          >
+            {{ plan.cta }}
+          </ui-button>
+        </div>
+      }
+    </div>
+
+    <!-- Money Back Guarantee -->
+    <p class="text-center text-secondary-500 mt-12">
+      All plans include a 30-day money-back guarantee. No questions asked.
+    </p>
+  </ui-container>
+</section>

@@ -1,0 +1,168 @@
+version: '3.8'
+
+services:
+  # MySQL Database Service
+  mysql:
+    container_name: slm-mysql
+    image: mysql:8.0
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-slmdb}
+      MYSQL_USER: ${MYSQL_USER:-slm_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-slm_password}
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      # Persist MySQL data
+      - mysql-data:/var/lib/mysql
+      # Uncomment if you have init scripts
+      # - ./slm-backend/docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+
+    networks:
+      - slm-network
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Spring Boot Backend Service
+  backend:
+    container_name: slm-backend
+    build:
+      context: ./slm-backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+    environment:
+      # Spring Profile
+      SPRING_PROFILES_ACTIVE: prod
+
+      # Database Configuration
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-slmdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-slm_user}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-slm_password}
+
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-your-very-secure-secret-key-that-is-at-least-256-bits-long-for-hs256-algorithm-please-change-this-in-production}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+
+      # File Upload Configuration
+      APP_UPLOAD_BASE_DIR: /app
+      APP_UPLOAD_PATH: uploads/reports/
+      APP_UPLOAD_URL_PREFIX: ${APP_UPLOAD_URL_PREFIX:-https://biedle.com}
+
+      # Server Configuration
+      SERVER_PORT: 3000
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+      # Persist uploaded files
+      - upload-data:/app/uploads
+
+    networks:
+      - slm-network
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/actuator/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Angular Frontend Service
+  frontend:
+    container_name: slm-frontend
+    build:
+      context: ./slm-frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+
+    networks:
+      - slm-network
+
+    depends_on:
+      backend:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  slm-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+  upload-data:
+    driver: local
+
+# =============================================================================
+# HOSTINGER DEPLOYMENT INSTRUCTIONS
+# =============================================================================
+#
+# 1. Upload all project files to your Hostinger VPS
+#
+# 2. Create/update the .env file in the root directory with:
+#    MYSQL_ROOT_PASSWORD=<strong-password>
+#    MYSQL_DATABASE=slmdb
+#    MYSQL_USER=slm_user
+#    MYSQL_PASSWORD=<strong-password>
+#    JWT_SECRET=<generate-with: openssl rand -base64 64>
+#    JWT_EXPIRATION=86400000
+#    APP_UPLOAD_URL_PREFIX=https://biedle.com
+#
+# 3. Build and start all services:
+#    docker-compose up -d --build
+#
+# 4. View logs:
+#    docker-compose logs -f
+#    docker-compose logs -f backend
+#    docker-compose logs -f frontend
+#    docker-compose logs -f mysql
+#
+# 5. Stop services:
+#    docker-compose down
+#
+# 6. Restart specific service:
+#    docker-compose restart backend
+#    docker-compose restart frontend
+#
+# 7. View running containers:
+#    docker-compose ps
+#
+# 8. Access the application:
+#    - Frontend: https://biedle.com
+#    - Backend API: https://biedle.com/api
+#    - Direct Backend: http://your-vps-ip:3000/api
+#
+# =============================================================================
+# NETWORK ARCHITECTURE
+# =============================================================================
+#
+# All services run on the same Docker network (slm-network):
+# - Frontend (nginx) proxies /api requests to backend
+# - Backend connects to MySQL using service name "mysql"
+# - CORS is configured to allow https://biedle.com
+#
+# =============================================================================

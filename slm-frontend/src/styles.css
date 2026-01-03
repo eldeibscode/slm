@@ -1,0 +1,16 @@
+/* AG Grid base styles - required for grid structure */
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+/* Custom AG Grid theme */
+@import './app/components/ag-grid/themes/ag-grid-custom.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
