@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import { TestimonialsService } from '../services/testimonials.service';
 import { NewsService } from '../services/news.service';
 import { ApiService } from '../services/api.service';
+import { HeroService } from '../services/hero.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -91,6 +92,30 @@ import { ApiService } from '../services/api.service';
               <div class="flex justify-between items-center">
                 <span class="text-sm text-secondary-600">Archived</span>
                 <span class="text-lg font-bold text-yellow-600">{{ stats().users.archived }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Heroes Stats -->
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-secondary-900 font-semibold">Hero Slides</div>
+              <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-secondary-600">All</span>
+                <span class="text-lg font-bold text-secondary-900">{{ stats().heroes.all }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-secondary-600">Published</span>
+                <span class="text-lg font-bold" [class]="stats().heroes.published >= 5 ? 'text-red-600' : 'text-green-600'">{{ stats().heroes.published }}/5</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-secondary-600">Draft/Archived</span>
+                <span class="text-lg font-bold text-yellow-600">{{ stats().heroes.archived }}</span>
               </div>
             </div>
           </div>
@@ -223,17 +248,68 @@ import { ApiService } from '../services/api.service';
               </ui-button>
             </div>
           </div>
+
+          <!-- Heroes Management Panel -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 class="text-2xl font-bold text-white mb-1">Hero Slides</h2>
+                  <p class="text-purple-100">Manage homepage hero carousel</p>
+                </div>
+                <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <ul class="space-y-3 mb-6">
+                <li class="flex items-center text-secondary-600">
+                  <svg class="w-5 h-5 mr-2 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Create and edit hero slides
+                </li>
+                <li class="flex items-center text-secondary-600">
+                  <svg class="w-5 h-5 mr-2 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Max 5 published slides
+                </li>
+                <li class="flex items-center text-secondary-600">
+                  <svg class="w-5 h-5 mr-2 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Manage display order
+                </li>
+                <li class="flex items-center text-secondary-600">
+                  <svg class="w-5 h-5 mr-2 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Configure CTA buttons
+                </li>
+              </ul>
+
+              <ui-button routerLink="/admin/heroes" class="w-full">
+                Manage Heroes
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </ui-button>
+            </div>
+          </div>
         </div>
 
         <!-- Quick Actions -->
         <div class="mt-12 bg-white rounded-lg shadow-sm p-6">
           <h3 class="text-xl font-bold text-secondary-900 mb-4">Quick Actions</h3>
-          <div class="grid md:grid-cols-3 gap-4">
+          <div class="grid md:grid-cols-4 gap-4">
             <ui-button variant="outline" routerLink="/admin/news/create">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
-              Create New Report
+              Create Report
             </ui-button>
             <ui-button variant="outline" routerLink="/admin/testimonials/create">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,11 +317,17 @@ import { ApiService } from '../services/api.service';
               </svg>
               Create Testimonial
             </ui-button>
+            <ui-button variant="outline" routerLink="/admin/heroes/create">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Create Hero
+            </ui-button>
             <ui-button variant="outline" routerLink="/admin/news">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
               </svg>
-              View All Reports
+              View Reports
             </ui-button>
           </div>
         </div>
@@ -270,13 +352,19 @@ export class AdminDashboardComponent implements OnInit {
       active: 0,
       archived: 0,
     },
+    heroes: {
+      all: 0,
+      published: 0,
+      archived: 0,
+    },
   });
 
   constructor(
     private testimonialsService: TestimonialsService,
     private newsService: NewsService,
     public authService: AuthService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private heroService: HeroService
   ) {}
 
   ngOnInit() {
@@ -342,6 +430,27 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: error => {
         console.error('Error loading users:', error);
+      },
+    });
+
+    // Load heroes stats
+    this.heroService.getHeroes('all').subscribe({
+      next: heroes => {
+        const published = heroes.filter(h => h.status === 'published').length;
+        const archived = heroes.filter(h => h.status !== 'published').length;
+        const all = heroes.length;
+
+        this.stats.update(s => ({
+          ...s,
+          heroes: {
+            all,
+            published,
+            archived,
+          },
+        }));
+      },
+      error: error => {
+        console.error('Error loading heroes:', error);
       },
     });
   }

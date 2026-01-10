@@ -68,6 +68,12 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/testimonials").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/testimonials/**").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/testimonials/**").authenticated()
+                        // Public hero endpoints (GET only)
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/heroes", "/heroes/**").permitAll()
+                        // Hero write operations require authentication (handled by @PreAuthorize)
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/heroes").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/heroes/**").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/heroes/**").authenticated()
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )

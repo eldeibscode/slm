@@ -43,26 +43,26 @@ export const siteConfig = {
 
   hero: {
     id: 'hero',
-    items: [
-      {
-        badge: 'New: AI-Powered Analysis',
-        title: 'Think Smarter, Move Faster',
-        subtitle:
-          'UltraThink helps you make better decisions with AI-powered insights. Transform complex data into actionable strategies in seconds.',
-        primaryCTA: { label: 'Start Free Trial', href: '#pricing' },
-        secondaryCTA: { label: 'Watch Demo', href: '#demo' },
-        socialProof: 'Trusted by 10,000+ professionals worldwide',
-      },
-      {
-        badge: 'New: AI-Powered Analysis',
-        title: 'Think Smarter, Move Faster',
-        subtitle:
-          'UltraThink helps you make better decisions with AI-powered insights. Transform complex data into actionable strategies in seconds.',
-        primaryCTA: { label: 'Start Free Trial', href: '#pricing' },
-        secondaryCTA: { label: 'Watch Demo', href: '#demo' },
-        socialProof: 'Trusted by 10,000+ professionals worldwide',
-      },
-    ],
+    // items: [
+    //   {
+    //     badge: 'New: AI-Powered Analysis',
+    //     title: 'Think Smarter, Move Faster',
+    //     subtitle:
+    //       'UltraThink helps you make better decisions with AI-powered insights. Transform complex data into actionable strategies in seconds.',
+    //     // primaryCTA: { label: 'Start Free Trial', href: '#pricing' },
+    //     // secondaryCTA: { label: 'Watch Demo', href: '#demo' },
+    //     socialProof: 'Trusted by 10,000+ professionals worldwide',
+    //   },
+    //   {
+    //     badge: 'New: AI-Powered Analysis',
+    //     title: 'Think Smarter, Move Faster',
+    //     subtitle:
+    //       'UltraThink helps you make better decisions with AI-powered insights. Transform complex data into actionable strategies in seconds.',
+    //     primaryCTA: { label: 'Start Free Trial', href: '#pricing' },
+    //     secondaryCTA: { label: 'Watch Demo', href: '#demo' },
+    //     socialProof: 'Trusted by 10,000+ professionals worldwide',
+    //   },
+    // ],
   },
 
   mawaqit: {

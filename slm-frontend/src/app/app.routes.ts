@@ -75,6 +75,23 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/testimonial-form.component').then(m => m.TestimonialFormComponent),
   },
 
+  // Admin heroes management routes
+  {
+    path: 'admin/heroes',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./pages/heroes-management.component').then(m => m.HeroesManagementComponent),
+  },
+  {
+    path: 'admin/heroes/create',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./pages/hero-form.component').then(m => m.HeroFormComponent),
+  },
+  {
+    path: 'admin/heroes/edit/:id',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./pages/hero-form.component').then(m => m.HeroFormComponent),
+  },
+
   // Admin routes
   {
     path: 'admin',
