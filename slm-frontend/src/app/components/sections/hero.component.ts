@@ -10,6 +10,7 @@ import { siteConfig } from '@/config/site.config';
   standalone: true,
   imports: [CommonModule, ContainerComponent, ButtonComponent, BadgeComponent],
   template: `
+    @if (heroConfig?.items?.length) {
     <section [id]="heroConfig.id" class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
       <!-- Background Gradient -->
       <div
@@ -188,16 +189,17 @@ import { siteConfig } from '@/config/site.config';
         </div>
       </ui-container>
     </section>
+    }
   `,
 })
 export class HeroComponent implements OnInit, OnDestroy {
-  heroConfig = siteConfig.hero;
+  heroConfig = (siteConfig as any).hero;
   currentIndex = signal(0);
   private autoPlayInterval: any;
   private autoPlayDelay = 5000; // 5 seconds
 
   ngOnInit(): void {
-    if (this.heroConfig.items.length > 1) {
+    if (this.heroConfig?.items?.length > 1) {
       this.startAutoPlay();
     }
   }
@@ -207,25 +209,28 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   nextSlide(): void {
+    if (!this.heroConfig?.items?.length) return;
     this.stopAutoPlay();
     this.currentIndex.update(index => (index === this.heroConfig.items.length - 1 ? 0 : index + 1));
     this.startAutoPlay();
   }
 
   previousSlide(): void {
+    if (!this.heroConfig?.items?.length) return;
     this.stopAutoPlay();
     this.currentIndex.update(index => (index === 0 ? this.heroConfig.items.length - 1 : index - 1));
     this.startAutoPlay();
   }
 
   goToSlide(index: number): void {
+    if (!this.heroConfig?.items?.length) return;
     this.stopAutoPlay();
     this.currentIndex.set(index);
     this.startAutoPlay();
   }
 
   private startAutoPlay(): void {
-    if (this.heroConfig.items.length > 1) {
+    if (this.heroConfig?.items?.length > 1) {
       this.autoPlayInterval = setInterval(() => {
         this.currentIndex.update(index =>
           index === this.heroConfig.items.length - 1 ? 0 : index + 1
