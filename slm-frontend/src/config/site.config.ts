@@ -26,19 +26,19 @@ export interface FAQItem {
 }
 
 export const siteConfig = {
-  name: 'Alsalam Förder Verein',
+  name: 'Salam Förderverein e.V. Bonn',
   tabTitle: "Salam",
-  logo: '/assets/images/logo.png',
+  logo: '/assets/images/slm.JPG',
   description: 'Supercharge your thinking with AI-powered insights',
   url: 'https://ultrathink.app',
 
   nav: [
-    { label: 'Mawaqit', href: '#mawaqit' },
-    { label: 'Features', href: '#features' },
     { label: 'News', href: '#news' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'Testimonials', href: '#testimonials' },
-    { label: 'FAQ', href: '#faq' },
+    { label: 'Features', href: '#features' },
+    // { label: 'Pricing', href: '#pricing' },
+    // { label: 'Testimonials', href: '#testimonials' },
+    { label: 'Mawaqit', href: '#mawaqit' },
+    // { label: 'FAQ', href: '#faq' },
   ] as NavItem[],
 
   hero: {
@@ -253,15 +253,16 @@ export const siteConfig = {
         { label: 'Status', href: '/status' },
       ],
       legal: [
-        { label: 'Privacy', href: '/privacy' },
-        { label: 'Terms', href: '/terms' },
-        { label: 'Cookies', href: '/cookies' },
+        { label: 'Kontakt', href: '/Kontakt' },
+        { label: 'Impressum', href: '/impressum' },
+        // { label: 'Cookies', href: '/cookies' },
       ],
     },
     social: {
-      twitter: 'https://twitter.com/ultrathink',
-      linkedin: 'https://linkedin.com/company/ultrathink',
-      github: 'https://github.com/ultrathink',
+      instagram: 'https://www.instagram.com/salam.fv.sm',
+      // twitter: 'https://twitter.com/ultrathink',
+      // linkedin: 'https://linkedin.com/company/ultrathink',
+      // github: 'https://github.com/ultrathink',
     },
   },
 };

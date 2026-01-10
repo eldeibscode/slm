@@ -17,21 +17,21 @@ import { CTAComponent } from '../components/sections/cta.component';
     HeroComponent,
     MawaqitComponent,
     FeaturesComponent,
-    PricingComponent,
-    TestimonialsComponent,
-    FAQComponent,
+    // PricingComponent,
+    // TestimonialsComponent,
+    // FAQComponent,
     NewsSectionComponent,
-    CTAComponent,
+    // CTAComponent,
   ],
   template: `
     <app-hero />
-    <app-mawaqit />
-    <app-features />
-    <app-pricing />
     <app-news-section />
-    <app-testimonials />
-    <app-faq />
-    <app-cta />
+    <app-features />
+<!--    <app-pricing />-->
+<!--    <app-testimonials />-->
+    <app-mawaqit />
+<!--    <app-faq />-->
+<!--    <app-cta />-->
   `,
 })
 export class HomeComponent {}

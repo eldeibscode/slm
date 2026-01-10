@@ -22,7 +22,7 @@ import { Role } from '../../models/user.model';
         <nav class="flex items-center justify-between h-16 lg:h-20">
           <!-- Logo -->
           <a href="/" class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center">
 <!--              <span class="text-white font-bold text-xl">U</span>-->
               <img [src]="config.logo" [alt]="config.name + ' logo'" class="h-10 w-auto object-contain"/>
             </div>
