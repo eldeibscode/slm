@@ -176,11 +176,14 @@ import { HeroService } from '../services/hero.service';
                   Display Order <span class="text-red-500">*</span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
                   formControlName="displayOrder"
                   class="w-full px-4 py-2 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   placeholder="1"
-                  min="0"
+                  (keydown)="onDisplayOrderKeyDown($event)"
+                  (input)="onDisplayOrderInput($event)"
                 />
                 <p class="text-xs text-secondary-500 mt-2">
                   Lower numbers appear first in the carousel
@@ -367,5 +370,32 @@ export class HeroFormComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/admin/heroes']);
+  }
+
+  // Allow only numeric input for display order
+  onDisplayOrderKeyDown(event: KeyboardEvent) {
+    // Allow: backspace, delete, tab, escape, enter, arrow keys
+    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+    // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (event.ctrlKey || event.metaKey) {
+      return;
+    }
+    // Block if not a number
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  // Sanitize pasted content and ensure only numbers
+  onDisplayOrderInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const sanitized = input.value.replace(/[^0-9]/g, '');
+    if (input.value !== sanitized) {
+      input.value = sanitized;
+      this.heroForm.get('displayOrder')?.setValue(sanitized ? parseInt(sanitized, 10) : 0);
+    }
   }
 }

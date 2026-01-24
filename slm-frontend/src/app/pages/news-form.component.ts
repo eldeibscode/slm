@@ -215,11 +215,14 @@ import { Category, Tag, Report } from '../models/news.model';
                   <span class="text-xs font-normal text-secondary-500 ml-2">(optional)</span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
                   formControlName="displayOrder"
-                  min="1"
                   class="w-full md:w-48 px-4 py-2 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Auto"
+                  (keydown)="onDisplayOrderKeyDown($event)"
+                  (input)="onDisplayOrderInput($event)"
                 />
                 <p class="mt-2 text-xs text-secondary-500">
                   Lower numbers appear first. Leave empty for default date-based ordering.
@@ -735,5 +738,32 @@ export class NewsFormComponent implements OnInit {
     }
 
     this.isSubmitting = false;
+  }
+
+  // Allow only numeric input for display order
+  onDisplayOrderKeyDown(event: KeyboardEvent) {
+    // Allow: backspace, delete, tab, escape, enter, arrow keys
+    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+    // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (event.ctrlKey || event.metaKey) {
+      return;
+    }
+    // Block if not a number
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  // Sanitize pasted content and ensure only numbers
+  onDisplayOrderInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const sanitized = input.value.replace(/[^0-9]/g, '');
+    if (input.value !== sanitized) {
+      input.value = sanitized;
+      this.reportForm.get('displayOrder')?.setValue(sanitized ? parseInt(sanitized, 10) : null);
+    }
   }
 }
