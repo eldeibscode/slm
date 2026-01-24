@@ -33,7 +33,7 @@ export const siteConfig = {
   url: 'https://ultrathink.app',
 
   nav: [
-    { label: 'News', href: '#news' },
+    { label: 'Nachrichten', href: '#news' },
     { label: 'Features', href: '#features' },
     // { label: 'Pricing', href: '#pricing' },
     // { label: 'Testimonials', href: '#testimonials' },
