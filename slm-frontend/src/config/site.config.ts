@@ -253,8 +253,8 @@ export const siteConfig = {
         { label: 'Status', href: '/status' },
       ],
       legal: [
-        { label: 'Kontakt', href: '/Kontakt' },
-        { label: 'Impressum', href: '/impressum' },
+        { label: 'Kontakt / Impressum ', href: '/Kontakt' },
+        // { label: 'Impressum', href: '/impressum' },
         // { label: 'Cookies', href: '/cookies' },
       ],
     },
