@@ -11,7 +11,7 @@ import { ContainerComponent } from '../components/ui/container.component';
       <ui-container>
         <div class="max-w-3xl mx-auto">
           <div class="bg-white rounded-2xl shadow-sm border border-secondary-200 p-8 md:p-12">
-            <h1 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-8">Kontakt</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-8">Kontakt / Impressum</h1>
 
             <!-- Organization Name -->
             <div class="mb-8">
@@ -61,7 +61,7 @@ import { ContainerComponent } from '../components/ui/container.component';
             </div>
 
             <!-- Registration -->
-            <div>
+            <div class="mb-8">
               <h3 class="text-lg font-semibold text-secondary-900 mb-2">Registereintrag</h3>
               <p class="text-secondary-600">
                 Eingetragen im Vereinsregister.<br />
@@ -69,6 +69,15 @@ import { ContainerComponent } from '../components/ui/container.component';
                 Registernummer: VR 9260
               </p>
             </div>
+
+            <!-- Content Responsibility -->
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-secondary-900 mb-2">
+                Inhaltlich verantwortlich gemäß § 55 Abs. 2 RStV
+              </h3>
+              <p class="text-secondary-600">der 1. Vorsitzende</p>
+            </div>
+
           </div>
         </div>
       </ui-container>
