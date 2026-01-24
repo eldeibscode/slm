@@ -8,6 +8,7 @@ import { TestimonialsService } from '../services/testimonials.service';
 import { NewsService } from '../services/news.service';
 import { ApiService } from '../services/api.service';
 import { HeroService } from '../services/hero.service';
+import { FeatureService } from '../services/feature.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -116,6 +117,30 @@ import { HeroService } from '../services/hero.service';
               <div class="flex justify-between items-center">
                 <span class="text-sm text-secondary-600">Draft/Archived</span>
                 <span class="text-lg font-bold text-yellow-600">{{ stats().heroes.archived }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features Stats -->
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-secondary-900 font-semibold">Features</div>
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-secondary-600">All</span>
+                <span class="text-lg font-bold text-secondary-900">{{ stats().features.all }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-secondary-600">Active</span>
+                <span class="text-lg font-bold text-green-600">{{ stats().features.active }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-secondary-600">Archived</span>
+                <span class="text-lg font-bold text-yellow-600">{{ stats().features.archived }}</span>
               </div>
             </div>
           </div>
@@ -299,6 +324,57 @@ import { HeroService } from '../services/hero.service';
               </ui-button>
             </div>
           </div>
+
+          <!-- Features Management Panel -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 class="text-2xl font-bold text-white mb-1">Features</h2>
+                  <p class="text-blue-100">Manage homepage feature cards</p>
+                </div>
+                <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <ul class="space-y-3 mb-6">
+                <li class="flex items-center text-secondary-600">
+                  <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Create and edit feature cards
+                </li>
+                <li class="flex items-center text-secondary-600">
+                  <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Choose icons for features
+                </li>
+                <li class="flex items-center text-secondary-600">
+                  <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Manage display order
+                </li>
+                <li class="flex items-center text-secondary-600">
+                  <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  Section hides when empty
+                </li>
+              </ul>
+
+              <ui-button routerLink="/admin/features" class="w-full">
+                Manage Features
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </ui-button>
+            </div>
+          </div>
         </div>
 
         <!-- Quick Actions -->
@@ -322,6 +398,12 @@ import { HeroService } from '../services/hero.service';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
               Create Hero
+            </ui-button>
+            <ui-button variant="outline" routerLink="/admin/features/create">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Create Feature
             </ui-button>
             <ui-button variant="outline" routerLink="/admin/news">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -357,6 +439,11 @@ export class AdminDashboardComponent implements OnInit {
       published: 0,
       archived: 0,
     },
+    features: {
+      all: 0,
+      active: 0,
+      archived: 0,
+    },
   });
 
   constructor(
@@ -364,7 +451,8 @@ export class AdminDashboardComponent implements OnInit {
     private newsService: NewsService,
     public authService: AuthService,
     private apiService: ApiService,
-    private heroService: HeroService
+    private heroService: HeroService,
+    private featureService: FeatureService
   ) {}
 
   ngOnInit() {
@@ -451,6 +539,27 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: error => {
         console.error('Error loading heroes:', error);
+      },
+    });
+
+    // Load features stats
+    this.featureService.getAllFeatures({ pageSize: 100 }).subscribe({
+      next: response => {
+        const active = response.features.filter(f => f.status === 'published').length;
+        const archived = response.features.filter(f => f.status === 'draft').length;
+        const all = response.features.length;
+
+        this.stats.update(s => ({
+          ...s,
+          features: {
+            all,
+            active,
+            archived,
+          },
+        }));
+      },
+      error: error => {
+        console.error('Error loading features:', error);
       },
     });
   }

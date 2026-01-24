@@ -92,6 +92,23 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/hero-form.component').then(m => m.HeroFormComponent),
   },
 
+  // Admin features management routes
+  {
+    path: 'admin/features',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./pages/feature-management.component').then(m => m.FeatureManagementComponent),
+  },
+  {
+    path: 'admin/features/create',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./pages/feature-form.component').then(m => m.FeatureFormComponent),
+  },
+  {
+    path: 'admin/features/edit/:id',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./pages/feature-form.component').then(m => m.FeatureFormComponent),
+  },
+
   // Admin routes
   {
     path: 'admin',
