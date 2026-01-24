@@ -7,6 +7,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/home.component').then(m => m.HomeComponent),
   },
   {
+    path: 'kontakt',
+    loadComponent: () => import('./pages/kontakt.component').then(m => m.KontaktComponent),
+  },
+  {
+    path: 'impressum',
+    loadComponent: () => import('./pages/impressum.component').then(m => m.ImpressumComponent),
+  },
+  {
     path: 'login',
     canActivate: [publicGuard],
     loadComponent: () => import('./components/auth/login.component').then(m => m.LoginComponent),
