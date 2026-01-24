@@ -16,10 +16,10 @@ import { LatestReportSummary } from '../../models/news.model';
         <!-- Section Header -->
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl sm:text-4xl font-bold text-secondary-900 mb-4">
-            Latest News & Reports
+            Neueste Nachrichten & Berichte
           </h2>
           <p class="text-lg text-secondary-600">
-            Stay updated with our latest announcements and community insights
+            Bleib auf dem Laufenden mit unseren neuesten Ankündigungen und Einblicken aus der Gemeinschaft
           </p>
         </div>
 
