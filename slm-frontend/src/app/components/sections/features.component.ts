@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from '../ui/container.component';
 import { FeatureService } from '../../services/feature.service';
-import { Feature } from '../../models/feature.model';
+import { Feature, FeatureSectionSetting } from '../../models/feature.model';
 
 @Component({
   selector: 'app-features',
@@ -15,13 +15,16 @@ import { Feature } from '../../models/feature.model';
         <ui-container>
           <!-- Section Header -->
           <div class="text-center max-w-3xl mx-auto mb-16">
-            <h2 class="text-3xl sm:text-4xl font-bold text-secondary-900 mb-4">
-              Everything you need to think smarter
-            </h2>
-            <p class="text-lg text-secondary-600">
-              Powerful features designed to help you make better decisions faster. Built for teams of
-              all sizes.
-            </p>
+            @if (sectionSettings()?.sectionTitle) {
+              <h2 class="text-3xl sm:text-4xl font-bold text-secondary-900 mb-4">
+                {{ sectionSettings()?.sectionTitle }}
+              </h2>
+            }
+            @if (sectionSettings()?.sectionDescription) {
+              <p class="text-lg text-secondary-600">
+                {{ sectionSettings()?.sectionDescription }}
+              </p>
+            }
           </div>
 
           <!-- Features Grid -->
@@ -183,12 +186,14 @@ import { Feature } from '../../models/feature.model';
 })
 export class FeaturesComponent implements OnInit {
   features = signal<Feature[]>([]);
+  sectionSettings = signal<FeatureSectionSetting | null>(null);
   isLoading = signal(false);
 
   constructor(private featureService: FeatureService) {}
 
   ngOnInit() {
     this.loadFeatures();
+    this.loadSectionSettings();
   }
 
   loadFeatures() {
@@ -202,6 +207,17 @@ export class FeaturesComponent implements OnInit {
       error: error => {
         console.error('Error loading features:', error);
         this.isLoading.set(false);
+      },
+    });
+  }
+
+  loadSectionSettings() {
+    this.featureService.getSectionSettings().subscribe({
+      next: settings => {
+        this.sectionSettings.set(settings);
+      },
+      error: error => {
+        console.error('Error loading section settings:', error);
       },
     });
   }

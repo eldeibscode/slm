@@ -41,3 +41,10 @@ export interface FeatureFilterParams {
   pageSize?: number;
   status?: 'draft' | 'published' | 'archived' | 'all';
 }
+
+// Section settings for the feature section header
+export interface FeatureSectionSetting {
+  id?: number;
+  sectionTitle?: string;
+  sectionDescription?: string;
+}

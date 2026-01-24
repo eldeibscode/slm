@@ -7,6 +7,7 @@ import {
   FeatureFilterParams,
   CreateFeatureRequest,
   UpdateFeatureRequest,
+  FeatureSectionSetting,
 } from '../models/feature.model';
 import { environment } from '../../environments/environment';
 
@@ -78,5 +79,24 @@ export class FeatureService {
    */
   deleteFeature(id: number | string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/features/${id}`);
+  }
+
+  // ============================================================================
+  // SECTION SETTINGS
+  // ============================================================================
+
+  /**
+   * Get section settings (title and description)
+   * Public endpoint
+   */
+  getSectionSettings(): Observable<FeatureSectionSetting> {
+    return this.http.get<FeatureSectionSetting>(`${this.apiUrl}/features/section-settings`);
+  }
+
+  /**
+   * Update section settings (admin only)
+   */
+  updateSectionSettings(data: FeatureSectionSetting): Observable<FeatureSectionSetting> {
+    return this.http.patch<FeatureSectionSetting>(`${this.apiUrl}/features/section-settings`, data);
   }
 }

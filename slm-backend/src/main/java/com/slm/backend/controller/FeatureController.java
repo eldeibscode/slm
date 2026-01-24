@@ -106,4 +106,34 @@ public class FeatureController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // ============================================================================
+    // SECTION SETTINGS ENDPOINTS
+    // ============================================================================
+
+    /**
+     * Get section settings (title and description)
+     * Public endpoint - needed for displaying the section header
+     */
+    @GetMapping("/section-settings")
+    public ResponseEntity<FeatureSectionSettingDto> getSectionSettings() {
+        FeatureSectionSettingDto settings = featureService.getSectionSettings();
+        return ResponseEntity.ok(settings);
+    }
+
+    /**
+     * Update section settings
+     * Only ADMIN role can update section settings
+     */
+    @PatchMapping("/section-settings")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateSectionSettings(@RequestBody FeatureSectionSettingDto request) {
+        try {
+            FeatureSectionSettingDto settings = featureService.updateSectionSettings(request);
+            return ResponseEntity.ok(settings);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("message", e.getMessage()));
+        }
+    }
 }

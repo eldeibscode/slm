@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ContainerComponent } from '../components/ui/container.component';
 import { ButtonComponent } from '../components/ui/button.component';
@@ -7,15 +8,48 @@ import { TableComponent } from '../components/ui/table.component';
 import { TableConfig, TableStats } from '../components/ui/table.types';
 import { FeatureService } from '../services/feature.service';
 import { AuthService } from '../services/auth.service';
-import { Feature } from '../models/feature.model';
+import { Feature, FeatureSectionSetting } from '../models/feature.model';
 
 @Component({
   selector: 'app-feature-management',
   standalone: true,
-  imports: [CommonModule, RouterModule, ContainerComponent, ButtonComponent, TableComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ContainerComponent, ButtonComponent, TableComponent],
   template: `
     <div class="min-h-screen bg-secondary-50 py-24">
       <ui-container>
+        <!-- Section Settings Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-secondary-200 p-6 mb-8">
+          <h2 class="text-xl font-semibold text-secondary-900 mb-4">Abschnittseinstellungen</h2>
+          <div class="grid gap-4">
+            <div>
+              <label class="block text-sm font-medium text-secondary-700 mb-1">Abschnittstitel</label>
+              <input
+                type="text"
+                [(ngModel)]="sectionTitle"
+                class="w-full px-4 py-2 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="Enter section title"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-secondary-700 mb-1">Abschnittsbeschreibung</label>
+              <textarea
+                [(ngModel)]="sectionDescription"
+                rows="3"
+                class="w-full px-4 py-2 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="Enter section description"
+              ></textarea>
+            </div>
+            <div class="flex justify-end">
+              <ui-button
+                (click)="saveSectionSettings()"
+                [disabled]="isSavingSettings()"
+              >
+                {{ isSavingSettings() ? 'Speichern...' : 'Einstellungen speichern' }}
+              </ui-button>
+            </div>
+          </div>
+        </div>
+
         <!-- Header with Create Button -->
         <div class="flex justify-between items-center mb-8">
           <div>
@@ -39,7 +73,12 @@ import { Feature } from '../models/feature.model';
 export class FeatureManagementComponent implements OnInit {
   allFeatures = signal<Feature[]>([]);
   isLoading = signal(false);
+  isSavingSettings = signal(false);
   stats = signal<TableStats>({ total: 0, published: 0, drafts: 0 });
+
+  // Section settings
+  sectionTitle = '';
+  sectionDescription = '';
 
   tableConfig: TableConfig<Feature> = {
     columns: [
@@ -132,6 +171,7 @@ export class FeatureManagementComponent implements OnInit {
 
   ngOnInit() {
     this.loadFeatures();
+    this.loadSectionSettings();
   }
 
   loadFeatures() {
@@ -145,6 +185,37 @@ export class FeatureManagementComponent implements OnInit {
       error: error => {
         console.error('Error loading features:', error);
         this.isLoading.set(false);
+      },
+    });
+  }
+
+  loadSectionSettings() {
+    this.featureService.getSectionSettings().subscribe({
+      next: settings => {
+        this.sectionTitle = settings.sectionTitle || '';
+        this.sectionDescription = settings.sectionDescription || '';
+      },
+      error: error => {
+        console.error('Error loading section settings:', error);
+      },
+    });
+  }
+
+  saveSectionSettings() {
+    this.isSavingSettings.set(true);
+    const settings: FeatureSectionSetting = {
+      sectionTitle: this.sectionTitle,
+      sectionDescription: this.sectionDescription,
+    };
+    this.featureService.updateSectionSettings(settings).subscribe({
+      next: () => {
+        this.isSavingSettings.set(false);
+        alert('Einstellungen erfolgreich gespeichert');
+      },
+      error: error => {
+        console.error('Error saving section settings:', error);
+        this.isSavingSettings.set(false);
+        alert('Fehler beim Speichern der Einstellungen');
       },
     });
   }

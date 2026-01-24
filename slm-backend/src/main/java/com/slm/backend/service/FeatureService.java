@@ -2,7 +2,9 @@ package com.slm.backend.service;
 
 import com.slm.backend.dto.feature.*;
 import com.slm.backend.entity.Feature;
+import com.slm.backend.entity.FeatureSectionSetting;
 import com.slm.backend.repository.FeatureRepository;
+import com.slm.backend.repository.FeatureSectionSettingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class FeatureService {
 
     private final FeatureRepository featureRepository;
+    private final FeatureSectionSettingRepository sectionSettingRepository;
 
     @Transactional(readOnly = true)
     public List<FeatureDto> getPublishedFeatures() {
@@ -152,6 +155,51 @@ public class FeatureService {
             .status(feature.getStatus().name().toLowerCase())
             .createdAt(feature.getCreatedAt())
             .updatedAt(feature.getUpdatedAt())
+            .build();
+    }
+
+    // ============================================================================
+    // SECTION SETTINGS
+    // ============================================================================
+
+    @Transactional(readOnly = true)
+    public FeatureSectionSettingDto getSectionSettings() {
+        FeatureSectionSetting setting = sectionSettingRepository.findFirstByOrderByIdAsc()
+            .orElse(null);
+
+        if (setting == null) {
+            // Return default values if no settings exist
+            return FeatureSectionSettingDto.builder()
+                .sectionTitle("Everything you need to think smarter")
+                .sectionDescription("Powerful features designed to help you make better decisions faster. Built for teams of all sizes.")
+                .build();
+        }
+
+        return mapSectionSettingToDto(setting);
+    }
+
+    @Transactional
+    public FeatureSectionSettingDto updateSectionSettings(FeatureSectionSettingDto request) {
+        FeatureSectionSetting setting = sectionSettingRepository.findFirstByOrderByIdAsc()
+            .orElse(new FeatureSectionSetting());
+
+        if (request.getSectionTitle() != null) {
+            setting.setSectionTitle(request.getSectionTitle());
+        }
+
+        if (request.getSectionDescription() != null) {
+            setting.setSectionDescription(request.getSectionDescription());
+        }
+
+        setting = sectionSettingRepository.save(setting);
+        return mapSectionSettingToDto(setting);
+    }
+
+    private FeatureSectionSettingDto mapSectionSettingToDto(FeatureSectionSetting setting) {
+        return FeatureSectionSettingDto.builder()
+            .id(setting.getId())
+            .sectionTitle(setting.getSectionTitle())
+            .sectionDescription(setting.getSectionDescription())
             .build();
     }
 }
