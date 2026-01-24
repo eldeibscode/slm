@@ -1,11 +1,15 @@
-import { Component, signal, HostListener } from '@angular/core';
+
+import { Component, signal, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ContainerComponent } from '../ui/container.component';
 import { ButtonComponent } from '../ui/button.component';
-import { siteConfig } from '@/config/site.config';
+import { siteConfig, NavItem } from '@/config/site.config';
 import { AuthService } from '../../services/auth.service';
+import { NewsService } from '../../services/news.service';
+import { FeatureService } from '../../services/feature.service';
 import { Role } from '../../models/user.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -31,7 +35,7 @@ import { Role } from '../../models/user.model';
 
           <!-- Desktop Navigation -->
           <div class="hidden lg:flex items-center space-x-8">
-            @for (item of config.nav; track item.href) {
+            @for (item of visibleNavItems(); track item.href) {
               <a
                 [href]="item.href"
                 class="text-secondary-600 hover:text-secondary-900 font-medium transition-colors"
@@ -156,7 +160,7 @@ import { Role } from '../../models/user.model';
         @if (isMobileMenuOpen()) {
           <div class="lg:hidden py-4 border-t">
             <div class="flex flex-col space-y-4">
-              @for (item of config.nav; track item.href) {
+              @for (item of visibleNavItems(); track item.href) {
                 <a
                   [href]="item.href"
                   class="text-secondary-600 hover:text-secondary-900 font-medium py-2"
@@ -221,13 +225,60 @@ import { Role } from '../../models/user.model';
     </header>
   `,
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   config = siteConfig;
   isScrolled = signal(false);
   isMobileMenuOpen = signal(false);
   isUserMenuOpen = signal(false);
 
-  constructor(public authService: AuthService) {}
+  // Track which sections have content
+  hasNews = signal(false);
+  hasFeatures = signal(false);
+  visibleNavItems = signal<NavItem[]>([]);
+
+  constructor(
+    public authService: AuthService,
+    private newsService: NewsService,
+    private featureService: FeatureService
+  ) {}
+
+  ngOnInit() {
+    this.checkSectionsAvailability();
+  }
+
+  checkSectionsAvailability() {
+    // Load both news and features to check availability
+    forkJoin({
+      news: this.newsService.getLatestReports(1),
+      features: this.featureService.getPublishedFeatures()
+    }).subscribe({
+      next: ({ news, features }) => {
+        this.hasNews.set(news.length > 0);
+        this.hasFeatures.set(features.length > 0);
+        this.updateVisibleNavItems();
+      },
+      error: (error) => {
+        console.error('Error checking section availability:', error);
+        // On error, show all nav items as fallback
+        this.visibleNavItems.set(this.config.nav);
+      }
+    });
+  }
+
+  updateVisibleNavItems() {
+    const filtered = this.config.nav.filter(item => {
+      // Check if nav item points to a section that has content
+      if (item.href === '#news') {
+        return this.hasNews();
+      }
+      if (item.href === '#features') {
+        return this.hasFeatures();
+      }
+      // Show all other nav items (like mawaqit)
+      return true;
+    });
+    this.visibleNavItems.set(filtered);
+  }
 
   @HostListener('window:scroll')
   onScroll() {
