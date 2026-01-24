@@ -24,7 +24,9 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     Page<Report> findByCategoryId(Long categoryId, Pageable pageable);
 
-    @Query("SELECT r FROM Report r WHERE r.status = :status ORDER BY r.publishedAt DESC")
+    @Query("SELECT r FROM Report r WHERE r.status = :status " +
+           "ORDER BY CASE WHEN r.displayOrder IS NULL THEN 1 ELSE 0 END, " +
+           "r.displayOrder ASC, r.publishedAt DESC")
     List<Report> findLatestPublished(@Param("status") Report.Status status, Pageable pageable);
 
     @Query("SELECT DISTINCT r FROM Report r LEFT JOIN r.tags t WHERE " +
@@ -49,4 +51,26 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     @Query("SELECT COUNT(r) FROM Report r WHERE r.status = :status")
     long countByStatus(@Param("status") Report.Status status);
+
+    @Query("SELECT DISTINCT r FROM Report r LEFT JOIN r.tags t WHERE " +
+           "(:status IS NULL OR r.status = :status) AND " +
+           "(:categoryId IS NULL OR r.category.id = :categoryId) AND " +
+           "(:authorId IS NULL OR r.author.id = :authorId) AND " +
+           "(:search IS NULL OR LOWER(r.title) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(r.excerpt) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
+           "(:tagIds IS NULL OR t.id IN :tagIds) AND " +
+           "(:dateFrom IS NULL OR r.createdAt >= :dateFrom) AND " +
+           "(:dateTo IS NULL OR r.createdAt <= :dateTo) " +
+           "ORDER BY CASE WHEN r.displayOrder IS NULL THEN 1 ELSE 0 END, " +
+           "r.displayOrder ASC, r.createdAt DESC")
+    Page<Report> findWithFiltersOrdered(
+        @Param("status") Report.Status status,
+        @Param("categoryId") Long categoryId,
+        @Param("authorId") Long authorId,
+        @Param("search") String search,
+        @Param("tagIds") List<Long> tagIds,
+        @Param("dateFrom") java.time.LocalDateTime dateFrom,
+        @Param("dateTo") java.time.LocalDateTime dateTo,
+        Pageable pageable
+    );
 }

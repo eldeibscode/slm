@@ -206,34 +206,55 @@ import { Category, Tag, Report } from '../models/news.model';
               </div>
             </div>
 
-            <!-- Status Selection -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
-              <label class="block text-sm font-medium text-secondary-900 mb-2">
-                Status <span class="text-red-500">*</span>
-              </label>
-              <div class="flex gap-4">
-                <label class="flex items-center">
-                  <input
-                    type="radio"
-                    formControlName="status"
-                    value="draft"
-                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-secondary-300"
-                  />
-                  <span class="ml-2 text-sm text-secondary-700">Archived</span>
+            <!-- Display Order & Status -->
+            <div class="bg-white rounded-lg shadow-sm p-6 space-y-6">
+              <!-- Display Order -->
+              <div>
+                <label class="block text-sm font-medium text-secondary-900 mb-2">
+                  Display Order
+                  <span class="text-xs font-normal text-secondary-500 ml-2">(optional)</span>
                 </label>
-                <label class="flex items-center">
-                  <input
-                    type="radio"
-                    formControlName="status"
-                    value="published"
-                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-secondary-300"
-                  />
-                  <span class="ml-2 text-sm text-secondary-700">Active</span>
-                </label>
+                <input
+                  type="number"
+                  formControlName="displayOrder"
+                  min="1"
+                  class="w-full md:w-48 px-4 py-2 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Auto"
+                />
+                <p class="mt-2 text-xs text-secondary-500">
+                  Lower numbers appear first. Leave empty for default date-based ordering.
+                </p>
               </div>
-              <p class="mt-2 text-xs text-secondary-500">
-                Archived reports are only visible to admins and reporters. Active reports are visible to everyone.
-              </p>
+
+              <!-- Status -->
+              <div>
+                <label class="block text-sm font-medium text-secondary-900 mb-2">
+                  Status <span class="text-red-500">*</span>
+                </label>
+                <div class="flex gap-4">
+                  <label class="flex items-center">
+                    <input
+                      type="radio"
+                      formControlName="status"
+                      value="draft"
+                      class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-secondary-300"
+                    />
+                    <span class="ml-2 text-sm text-secondary-700">Archived</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="radio"
+                      formControlName="status"
+                      value="published"
+                      class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-secondary-300"
+                    />
+                    <span class="ml-2 text-sm text-secondary-700">Active</span>
+                  </label>
+                </div>
+                <p class="mt-2 text-xs text-secondary-500">
+                  Archived reports are only visible to admins and reporters. Active reports are visible to everyone.
+                </p>
+              </div>
             </div>
 
             <!-- Form Actions -->
@@ -314,6 +335,7 @@ export class NewsFormComponent implements OnInit {
       content: ['', Validators.required],
       categoryId: [''],
       status: ['draft', Validators.required],
+      displayOrder: [null],
     });
   }
 
@@ -348,6 +370,7 @@ export class NewsFormComponent implements OnInit {
           content: report.content,
           categoryId: report.category?.id || '',
           status: report.status,
+          displayOrder: report.displayOrder || null,
         });
         this.selectedTagIds = report.tags.map(tag => tag.id);
 
@@ -572,10 +595,15 @@ export class NewsFormComponent implements OnInit {
 
     if (this.isEditMode && this.reportId) {
       // EDIT MODE
+      // Handle displayOrder: convert empty string or 0 to clear value (send 0 to backend to clear)
+      const displayOrderValue = this.reportForm.value.displayOrder;
+      const displayOrder = displayOrderValue && displayOrderValue > 0 ? displayOrderValue : 0;
+
       const formData = {
         ...this.reportForm.value,
         tagIds: this.selectedTagIds,
         featuredImageId: this.featuredImageId, // Include if we have an existing image selected
+        displayOrder: displayOrder, // 0 clears the order, positive number sets it
       };
 
       this.newsService.updateReport(this.reportId, formData).subscribe({
@@ -622,9 +650,14 @@ export class NewsFormComponent implements OnInit {
       });
     } else {
       // CREATE MODE
+      // Handle displayOrder: only include if set
+      const displayOrderValue = this.reportForm.value.displayOrder;
+      const displayOrder = displayOrderValue && displayOrderValue > 0 ? displayOrderValue : undefined;
+
       const formData = {
         ...this.reportForm.value,
         tagIds: this.selectedTagIds,
+        displayOrder: displayOrder,
         // Don't include featuredImageId on create - images don't exist yet
       };
 

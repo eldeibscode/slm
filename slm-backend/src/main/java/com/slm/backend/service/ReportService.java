@@ -45,11 +45,6 @@ public class ReportService {
         int pageNum = page != null ? page : 0;
         int size = pageSize != null && pageSize > 0 ? pageSize : 10;
 
-        String sortField = sortBy != null ? sortBy : "createdAt";
-        Sort.Direction direction = "asc".equalsIgnoreCase(sortOrder) ? Sort.Direction.ASC : Sort.Direction.DESC;
-
-        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(direction, sortField));
-
         Report.Status reportStatus = null;
         if (status != null && !status.isEmpty()) {
             try {
@@ -62,16 +57,37 @@ public class ReportService {
         // Convert empty tagIds list to null for query
         List<Long> effectiveTagIds = (tagIds != null && !tagIds.isEmpty()) ? tagIds : null;
 
-        Page<Report> reportPage = reportRepository.findWithFilters(
-            reportStatus,
-            categoryId,
-            authorId,
-            search,
-            effectiveTagIds,
-            dateFrom,
-            dateTo,
-            pageable
-        );
+        Page<Report> reportPage;
+
+        // Use custom ordered query when no explicit sorting is requested
+        // This prioritizes displayOrder (NULLS LAST) then createdAt DESC
+        if (sortBy == null || sortBy.isEmpty()) {
+            Pageable pageable = PageRequest.of(pageNum, size);
+            reportPage = reportRepository.findWithFiltersOrdered(
+                reportStatus,
+                categoryId,
+                authorId,
+                search,
+                effectiveTagIds,
+                dateFrom,
+                dateTo,
+                pageable
+            );
+        } else {
+            // Use traditional sorting when explicit sort field is provided
+            Sort.Direction direction = "asc".equalsIgnoreCase(sortOrder) ? Sort.Direction.ASC : Sort.Direction.DESC;
+            Pageable pageable = PageRequest.of(pageNum, size, Sort.by(direction, sortBy));
+            reportPage = reportRepository.findWithFilters(
+                reportStatus,
+                categoryId,
+                authorId,
+                search,
+                effectiveTagIds,
+                dateFrom,
+                dateTo,
+                pageable
+            );
+        }
 
         List<ReportDto> reports = reportPage.getContent().stream()
             .map(this::mapToDto)
@@ -116,6 +132,7 @@ public class ReportService {
             .author(author)
             .featuredImage(request.getFeaturedImage())
             .featuredImageId(request.getFeaturedImageId())
+            .displayOrder(request.getDisplayOrder())
             .viewCount(0L)
             .build();
 
@@ -193,6 +210,16 @@ public class ReportService {
 
         if (request.getFeaturedImageId() != null) {
             report.setFeaturedImageId(request.getFeaturedImageId());
+        }
+
+        // Handle displayOrder - allow setting to null by checking if the field was provided
+        if (request.getDisplayOrder() != null) {
+            // Value of 0 or less clears the display order
+            if (request.getDisplayOrder() <= 0) {
+                report.setDisplayOrder(null);
+            } else {
+                report.setDisplayOrder(request.getDisplayOrder());
+            }
         }
 
         report = reportRepository.save(report);
@@ -346,6 +373,7 @@ public class ReportService {
             .tags(report.getTags().stream().map(this::mapTagToDto).collect(Collectors.toList()))
             .images(report.getImages().stream().map(this::mapImageToDto).collect(Collectors.toList()))
             .viewCount(report.getViewCount())
+            .displayOrder(report.getDisplayOrder())
             .featuredImage(featuredImageUrl)
             .featuredImageId(report.getFeaturedImageId())
             .build();

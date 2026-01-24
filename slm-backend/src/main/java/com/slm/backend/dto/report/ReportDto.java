@@ -33,6 +33,7 @@ public class ReportDto {
     private List<ReportImageDto> images = new ArrayList<>();
 
     private Long viewCount;
+    private Integer displayOrder;
     private String featuredImage;
     private Long featuredImageId;
 

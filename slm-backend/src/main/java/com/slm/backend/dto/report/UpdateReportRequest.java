@@ -31,4 +31,6 @@ public class UpdateReportRequest {
     private Long featuredImageId;
 
     private String featuredImage;
+
+    private Integer displayOrder;
 }

@@ -62,6 +62,11 @@ public class Report extends BaseEntity {
     @Column(nullable = false)
     private Long viewCount = 0L;
 
+    // Custom display order - null means use default date-based ordering
+    // Lower numbers appear first, null values appear last
+    @Column(name = "display_order")
+    private Integer displayOrder;
+
     @Column(length = 500)
     private String featuredImage;
 

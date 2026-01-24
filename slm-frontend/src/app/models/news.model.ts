@@ -18,6 +18,7 @@ export interface Report {
   tags: Tag[];
   images: ReportImage[];
   viewCount: number;
+  displayOrder?: number;
   featuredImage?: string;
   featuredImageId?: number;
 }
@@ -60,6 +61,7 @@ export interface CreateReportRequest {
   tagIds: number[];
   featuredImageId?: number;
   featuredImage?: string;
+  displayOrder?: number;
 }
 
 export interface UpdateReportRequest {
@@ -71,6 +73,7 @@ export interface UpdateReportRequest {
   tagIds?: number[];
   featuredImageId?: number;
   featuredImage?: string;
+  displayOrder?: number;
 }
 
 export interface ReportListResponse {

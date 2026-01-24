@@ -66,6 +66,13 @@ export class NewsManagementComponent implements OnInit {
         valueFormatter: (item) => item.status === 'published' ? 'Active' : item.status === 'draft' ? 'Archived' : item.status,
       },
       {
+        key: 'displayOrder',
+        label: 'Order',
+        type: 'text',
+        sortable: true,
+        valueFormatter: (item) => item.displayOrder ? item.displayOrder.toString() : '-',
+      },
+      {
         key: 'viewCount',
         label: 'Views',
         type: 'text',

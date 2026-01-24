@@ -38,4 +38,6 @@ public class CreateReportRequest {
     private Long featuredImageId;
 
     private String featuredImage;
+
+    private Integer displayOrder;
 }
