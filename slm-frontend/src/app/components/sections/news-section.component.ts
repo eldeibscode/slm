@@ -133,7 +133,7 @@ import { LatestReportSummary } from '../../models/news.model';
         @if (!isLoading() && latestReports().length > 0) {
           <div class="text-center mt-12">
             <ui-button routerLink="/news" size="lg">
-              View All News
+              Alle Nachrichten
               <svg
                 class="w-5 h-5 ml-2"
                 fill="none"

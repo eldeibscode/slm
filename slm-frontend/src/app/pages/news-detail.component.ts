@@ -104,7 +104,7 @@ import { Report } from '../models/news.model';
 
           <!-- Back Button -->
           <div class="max-w-4xl mx-auto mt-12">
-            <ui-button variant="outline" routerLink="/news">← Back to News</ui-button>
+            <ui-button variant="outline" routerLink="/news">← Zurück</ui-button>
           </div>
         }
 
@@ -112,7 +112,7 @@ import { Report } from '../models/news.model';
           <div class="text-center py-16">
             <h2 class="text-2xl font-bold text-secondary-900 mb-4">Report not found</h2>
             <p class="text-secondary-600 mb-6">The report you're looking for doesn't exist</p>
-            <ui-button routerLink="/news">View All News</ui-button>
+            <ui-button routerLink="/news">Alle Nachrichten</ui-button>
           </div>
         }
       </ui-container>
