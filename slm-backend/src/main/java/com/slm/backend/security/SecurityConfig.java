@@ -74,6 +74,13 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/heroes").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/heroes/**").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/heroes/**").authenticated()
+                        // Public feature endpoints (GET only)
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/features/published", "/features/section-settings").permitAll()
+                        // Feature write operations require authentication (handled by @PreAuthorize)
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/features", "/features/**").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/features").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/features/**").authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/features/**").authenticated()
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
